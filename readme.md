@@ -40,7 +40,7 @@ Voyez le document [readme_fnct.md](readme_fnct.md) pour plus de combinaisons de 
 
 Le Pico doit exécuter une version de MicroPython implémentant `os.dupterm()` dans le firmware MicroPython.
 
-Comment vérifier la présence de `dupterm()` ?
+## Comment vérifier la présence de `dupterm()` ?
 
 1. Ouvrir une session REPL sur le Pico à l'aide de ThonnyIDE ou RShell ou MPRemote
 2. Saisir le code suivant dans la session REPL. Si la fonction `dupterm()` existe alors microPython doit simplement nous dire que c'est une fonction:
@@ -54,7 +54,7 @@ Comment vérifier la présence de `dupterm()` ?
 Super! La fonction `dupterm()` est bien disponible dans le firmware :-)<br />
 Si REPL retourne une erreur alors il faut installer une version de MicroPython avec le support `dupterm()`.
 
-Installer MicroPython avec support `dupterm()` :
+## Installer MicroPython avec support `dupterm()` :
 
 Dans la version MicroPython 1.18 (jan 2022), `dupterm()` n'est pas encore inclus. J'ai donc recompilé un "MicroPython + DupTerm pour RaspberryPi Pico" inclus dans ce dépôt.
 1. Télécharger et décompresser le fichier [_firmware/pico-dupterm-uf2.zip](_firmware/pico-dupterm-uf2.zip) --> Le fichier `firmware.uf2` est maintenant disponible.
@@ -101,15 +101,23 @@ Cette implémentation utilise le signal "Device Ready" du minitel pour suspendre
 
 # Créer un système autonome
 
-## Boot.py
-Le fichier [boot.py](boot.py) proposé ici, initialise automatiquement l'UART en 9600 bauds sur le Pico du fait un `dupterm()` sur l'UART.
+Pour créer un système autonome, il faut pouvoir faire toutes les opérations nécessaire (même le coding de script) depuis le Minitel.
 
-Le script boot.py utilise également un switch (RunApp, sur le GPIO16) permettant d'inhiler/activer la création de l'UART et le réplication de REPL. La LED sur GPIO 25 du Pico s'allume lorsque REPL est répliqué sur l'UART.
+Voici les différentes éléments mis en oeuvre.
+
+## Boot.py
+Le fichier [boot.py](lib/boot.py) proposé ici, initialise automatiquement l'UART en 9600 bauds sur le Pico du fait un `dupterm()` sur l'UART.
+
+Le script boot.py utilise également un switch (RunApp, sur le GPIO16) permettant d'inhiler/activer la création de l'UART et le réplication de REPL. Cela permet de récupérer la main sur le Raspberry-Pi Pico depuis un ordinateur même si quelque-chose se passe mal.
+
+La LED sur GPIO 25 du Pico s'allume lorsque REPL est répliqué sur l'UART.
 
 ![Bouton RunApp sur Pico](docs/_static/picotel-runapp.jpg)
 
 ## mshell.py
 Le projet __MShell__ (minimalist shell) est une ligne de commande de type Linux écrit en MycroPython. MShell est conçu pour apporter un support rudimentaire de gestion de fichiers. Avec mshell is est possible de créer/effacer/voir/copier/déplacer les fichiers directement depuis la session REPL.
+
+Une copie des fichiers __MShell__ est disponible dans le sous-répertoire [lib/](lib) .
 
 Le projet inclus par ailleurs un fichier d'aide (`mshell.txt`) décrivant les commandes et leurs possibilités.
 
@@ -147,6 +155,17 @@ $ cat coca.txt
 
 $
 ```
+
+## Echange Ordinateur <-> Pico
+
+L'interface USB-Serie du Raspberry-Pi Pico reste totalement accessible et fonctionnelle.
+
+Il est donc possible de connecter le Pico sur un ordinateur et d'échanger des fichiers avec vos utilitaires habituelles __sans avoir besoin de déconnecter le Pico du Minitel__.
+
+Outils pour travailler avec votre Pico.
+* MPRemote
+* ThonnyIDE
+* RShell
 
 ## Limitation du clavier Minitel
 
