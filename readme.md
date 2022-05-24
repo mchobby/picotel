@@ -177,10 +177,12 @@ Le clavier ne permet pas de saisir certains caractères:
 * [Mode d'emploi du Minitel 2 (Philips, détaillé)](docs/mode-d-emploi-minitel- 2-philips-detaille.pdf) (_pdf_)
 * [Schéma Minitel](docs/sch_minitel.pdf) (_pdf_)
 * [RX-TX Minitel](docs/RX-TX-Minitel.jpg) (_png_)
+* [ASCII - American Standard Code for Information Interchange](https://fr.wikipedia.org/wiki/American_Standard_Code_for_Information_Interchange) (_Wikipedia.fr_)
 
 Lectures complémentaires:
 * [Minitel branché sur mon Raspberry-Pi Pico](https://arduino103.blogspot.com/2022/04/minitel-branche-sur-mon-raspberry-pi.html)
 * [univ-toulouse.fr - grundman - Modems-HOWTO-8](http://www.math.univ-toulouse.fr/~grundman/linux/HOWTO/Modems-HOWTO-8.html) (_ne semble plus accessible_)
+* [From Trash to Treasure: How to Resurrect a Minitel Terminal](https://duino4projects.com/from-trash-to-treasure-how-to-resurrect-a-minitel-terminal/)
 
 # Shopping list
 * DIN Audio/Video Connector, plug, 5 Pos - PS000178, MultiCom Pro [available at Farnell](https://be.farnell.com/pro-signal/ps000178/din-audio-video-conn-plug-5pos/dp/2911032)
