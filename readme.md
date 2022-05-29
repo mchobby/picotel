@@ -10,6 +10,10 @@ Par autonomie, il faut comprendre:
 * Execution de code (done with REPL thanks to `import module_name`)
 * Transfert avec un ordinateur (done, tanks to Pico USB and MPRemote or ThonnyIDE)
 
+__Hacking or not hacking__<br />
+![Hacking or not hacking](docs/minitel2_hack/hack-or-not-hack.jpg) <br />
+Bien que cela ne soit pas nécessaire pour profiter des bienfait de MicroPython sur votre Minitel 2... l'idée de pouvoir hacker le Minitel reste quelque-chose de très captivant. [Les développements du hacking fait l'objet d'une page séparée](docs/minitel2_hack/minitel2_hack.md).
+
 # Matériel
 Connecteur UART côté minitel
 

@@ -2,7 +2,7 @@
 
 Hier, j'ai ouvert le Minitel 2 pour y passer ma curiosité, le nettoyer (il sent après 1/4 d'heure de travail) et enlever la fiche téléphonique qui ne sert plus à rien.
 
-Si vous voulez quelques photographies durant le démontage, voyez [l'article pary sur le blog](xx).
+Si vous voulez quelques photographies durant le démontage, voyez [l'article pary sur le blog](https://arduino103.blogspot.com/2022/05/picotel-nettoyage-et-retro-ingenierie.html).
 
 # Détails de la carte
 
@@ -35,4 +35,4 @@ Le lien ci-dessous conduit au fichier Gimp permettant de masquer ou pas certains
 
 # A suivre
 
-C'est encore loin d'être terminé...
+C'est encore loin d'être terminé... même pas encore lu la ROM
