@@ -15,11 +15,13 @@ __Hacking or not hacking__<br />
 Bien que cela ne soit pas nécessaire pour profiter des bienfait de MicroPython sur votre Minitel 2... l'idée de pouvoir hacker le Minitel reste quelque-chose de très captivant. [Les développements du hacking fait l'objet d'une page séparée](docs/minitel2_hack/minitel2_hack.md).
 
 # Matériel
-Connecteur UART côté minitel
+__Connecteur UART côté minitel:__
 
 ![Connecteur UART du Minitel](docs/_static/connector.jpg)
 
-Fiche DIN 5 positions
+Attention: le signal Device Ready (aussi appelé PT) n'est actif que durant le mode vidéotexte. En mode Terminal, ce signal est ignoré!
+
+__Fiche DIN 5 positions:__
 
 ![Connecteur UART du Minitel](docs/_static/DIN-5-plug.jpg)
 
@@ -63,7 +65,7 @@ Si REPL retourne une erreur alors il faut installer une version de MicroPython a
 Dans la version MicroPython 1.18 (jan 2022), `dupterm()` n'est pas encore inclus. J'ai donc recompilé un "MicroPython + DupTerm pour RaspberryPi Pico" inclus dans ce dépôt.
 1. Télécharger et décompresser le fichier [_firmware/pico-dupterm-uf2.zip](_firmware/pico-dupterm-uf2.zip) --> Le fichier `firmware.uf2` est maintenant disponible.
 2. Presser le bouton "Boot0" du pico en le mettant sous tension --> Le Pico affiche un système de fichiers sur l'ordinateur (comme une Clé USB).
-3. Copier le fichier `firmware.uf2` (par glissé/dépossé) dans le lecteur de Pico.<br />Après quelques secondes, le Pico redémarre et le lecteur disparaît.
+3. Copier le fichier `firmware.uf2` (par glissé/déposé) dans le lecteur de Pico.<br />Après quelques secondes, le Pico redémarre et le lecteur disparaît.
 
 
 # PicoTel SANS contrôle de flux
@@ -71,8 +73,6 @@ Dans la version MicroPython 1.18 (jan 2022), `dupterm()` n'est pas encore inclus
 ![brancher le Raspberry-Pi Pico sur un Minitel](docs/_static/minitel-to-pico.jpg)
 
 Cette implémentation fonctionne correctement mais nécessite néanmoins un temps de pause (500 ms) après chaque opération `print()` pour éviter de surcharger le l'UART du Minitel.
-
-Une implémentation avec contrôle matériel du flux (Device Ready) sera mise en oeuvre (voir plus bas).
 
 ## REPL via UART
 
@@ -96,20 +96,43 @@ Use Ctrl-] to exit this shell
 
 Il est maintenant possible de saisir des commandes Python directement sur le Minitel.
 
+__Attention:__ l'envoi massif de texte (avec CR/LF) peut perturber le terminal Minitel et provoquer un écrasement de texte sur l'écran.
+
+## REPL via PicoTelUart
+La classe `PicoTelUart` ([picotel.py](lib/picotel.py)) s'insère entre l'uart matériel et le dupterm(). PicoTelUart insère un délai de 2ms après envoi de chaque trame de données vers le minitel de sorte qu'il n'y a plus d'écrasement de l'affichage sur le minitel.
+
+Voici comment cela fonctionne:
+
+```
+$ mpremote
+Connected to MicroPython at /dev/ttyACM0
+Use Ctrl-] to exit this shell
+
+>>> from picotel import PicoTelUart
+>>> ser = PicoTelUart( 0, 9600, bits=7, parity=2, stop=1 )
+>>> from os import dupterm
+>>> dupterm( ser )
+```
+
 # PicoTel AVEC contrôle de flux MATERIEL
 
-En cours de construction ...
+Le signal "Device Ready" n'est pas utilisé par le firmware Minitel en mode Terminal (uniquement le mode VideoText).
 
-Cette implémentation utilise le signal "Device Ready" du minitel pour suspendre l'émission de donnée vers le minitel lorsque son UART est saturé.
+Par conséquent, il n'existe aucun moyen de gérer le flux de transmission (ni XON-XOFF, ni matériel) :-(
 
 
 # Créer un système autonome
 
-Pour créer un système autonome, il faut pouvoir faire toutes les opérations nécessaire (même le coding de script) depuis le Minitel.
+Pour créer un système autonome, il faut pouvoir faire toutes les opérations nécessaires  depuis le Minitel lui-même.
+
+Cela inclus:
+* Manipulation du système de fichier
+* Edition de texte/script
+* transfert avec un ordinateur
 
 Voici les différentes éléments mis en oeuvre.
 
-## Boot.py
+## boot.py
 Le fichier [boot.py](lib/boot.py) proposé ici, initialise automatiquement l'UART en 9600 bauds sur le Pico du fait un `dupterm()` sur l'UART.
 
 Le script boot.py utilise également un switch (RunApp, sur le GPIO16) permettant d'inhiler/activer la création de l'UART et le réplication de REPL. Cela permet de récupérer la main sur le Raspberry-Pi Pico depuis un ordinateur même si quelque-chose se passe mal.
@@ -117,6 +140,11 @@ Le script boot.py utilise également un switch (RunApp, sur le GPIO16) permettan
 La LED sur GPIO 25 du Pico s'allume lorsque REPL est répliqué sur l'UART.
 
 ![Bouton RunApp sur Pico](docs/_static/picotel-runapp.jpg)
+
+## main.py
+Le fichier principal exécuté par le Pico juste après l'initialisation (boot.py).
+
+Dans le cas du PicoTel, le script principal vérifie l'état du switch RunApp avant de démarrer mshell (voir ci-dessous).
 
 ## mshell.py
 Le projet __MShell__ (minimalist shell) est une ligne de commande de type Linux écrit en MycroPython. MShell est conçu pour apporter un support rudimentaire de gestion de fichiers. Avec mshell is est possible de créer/effacer/voir/copier/déplacer les fichiers directement depuis la session REPL.
@@ -160,6 +188,25 @@ $ cat coca.txt
 $
 ```
 
+## pye.py
+
+pye est un éditeur VT100 écrit en MicroPython développé par robert-hh ([lien GitHub](https://github.com/robert-hh/Micropython-Editor)) et testé avec succès sur le Minitel 2.
+
+pye est/sera intégré à mshell (commande `edit`, version 0.0.3) pour rapidement éditer un fichier ou script.
+
+Il est également possible de démarrer un éditeur dans vos propres scripts avec le code suivant:
+``` python
+import pye
+
+with open( 'coca.txt' ) as f:
+	content = f.read().splitlines()
+pye.pye( content )
+```
+
+Voici la liste des raccourcis claviers supportés:
+
+source: https://github.com/robert-hh/Micropython-Editor
+
 ## Echange Ordinateur <-> Pico
 
 L'interface USB-Serie du Raspberry-Pi Pico reste totalement accessible et fonctionnelle.
@@ -171,10 +218,13 @@ Outils pour travailler avec votre Pico.
 * ThonnyIDE
 * RShell
 
-## Limitation du clavier Minitel
+# Limitations et bugs connus
+* Utiliser le mode ASCII US pour voir les "#" (sinon affichés comme ""£")
 
+## Limitation du clavier Minitel
 Le clavier ne permet pas de saisir certains caractères:
 * _ : (underscore) parfois utilisé dans les noms de fichiers
+* CTRL + C : n'arrive pas jusqu'à REPL! 
 
 # Ressources complémentaires
 * [Mode d'emploi du Minitel 2 (Philips)](docs/mode-d-emploi-minitel- 2-philips.pdf) (_pdf_)

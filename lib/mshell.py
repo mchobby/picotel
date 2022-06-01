@@ -1,5 +1,4 @@
 import os
-import time
 
 __version__ = "0.0.2"
 
@@ -36,7 +35,6 @@ def exec_cat( args ):
 	_count = 0
 	while _s != None:
 		print( _s.rstrip('\n') )
-		time.sleep_ms( 500 )
 		_s = _file.readline()
 		if len(_s)==0:
 			_count += 1

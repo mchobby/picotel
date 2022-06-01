@@ -1,6 +1,7 @@
 import sys
 import time
 
+
 empty = 0
 with open( 'logos.txt' ) as file:
 	s = file.readline()
@@ -19,5 +20,4 @@ with open( 'logos.txt' ) as file:
 		else:
 			empty = 0
 			print( s )
-			time.sleep_ms(500)
 		s = file.readline()
