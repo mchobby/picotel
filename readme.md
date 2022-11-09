@@ -5,7 +5,7 @@ Le but du projet PicoTel est de créer un système complètement autonome autour
 ![picotel - Raspberry-Pi + Minitel](docs/_static/picotel.jpg)
 
 Par autonomie, il faut comprendre:
-* Gestion de fichier (done with mshell)
+* Gestion de fichier (done with minishell)
 * Editeur de code
 * Execution de code (done with REPL thanks to `import module_name`)
 * Transfert avec un ordinateur (done, tanks to Pico USB and MPRemote or ThonnyIDE)
@@ -146,14 +146,12 @@ Le fichier principal exécuté par le Pico juste après l'initialisation (boot.p
 
 Dans le cas du PicoTel, le script principal vérifie l'état du switch RunApp avant de démarrer mshell (voir ci-dessous).
 
-## mshell.py
-Le projet __MShell__ (minimalist shell) est une ligne de commande de type Linux écrit en MycroPython. MShell est conçu pour apporter un support rudimentaire de gestion de fichiers. Avec mshell is est possible de créer/effacer/voir/copier/déplacer les fichiers directement depuis la session REPL.
+## MiniShell - mshell.py
+Le projet __MiniShell__ (mshell pour les intimes) est une ligne de commande de type Linux, un shell minimaliste, lui-même écrit en MycroPython. MShell est conçu pour apporter un support rudimentaire de gestion de fichiers. Avec mshell is est possible de créer/effacer/voir/copier/déplacer les fichiers directement depuis la session REPL.
 
-Une copie des fichiers __MShell__ est disponible dans le sous-répertoire [lib/](lib) .
+Depuis la création de PicoTel, MiniShell (alias mshell) a fortement évolué au point de disposer de son propre dépôt (micropython-minishell](https://github.com/mchobby/micropython-minishell)
 
-Le projet inclus par ailleurs un fichier d'aide (`mshell.txt`) décrivant les commandes et leurs possibilités.
-
-__MShell__ peut-être démarré depuis REPL en saississant `import mshell` (ou redémarré avec `mshell.run()` ).
+Un fois [MiniShell / MShell](https://github.com/mchobby/micropython-minishell) copié dans le le sous-répertoire [lib/](lib), il peut-être démarré depuis REPL en saississant `import mshell` (ou redémarré avec `mshell.run()` ).
 
 L'image d'accueil de ce readme présente justement l'utilisation de MShell sur le Minitel, résultant des saisies suivantes:
 
@@ -188,11 +186,11 @@ $ cat coca.txt
 $
 ```
 
-## pye.py
+## Editeur de texte - pye.py
 
-pye est un éditeur VT100 écrit en MicroPython développé par robert-hh ([lien GitHub](https://github.com/robert-hh/Micropython-Editor)) et testé avec succès sur le Minitel 2.
+pye est un éditeur VT100 écrit en MicroPython développé par robert-hh ([lien GitHub](https://github.com/robert-hh/Micropython-Editor)). Celui-ci a testé avec succès sur le Minitel 2.
 
-pye est/sera intégré à mshell (commande `edit`, version 0.0.3) pour rapidement éditer un fichier ou script.
+Cet editeur de texte est intégré à mshell (commande `edit`, version 0.0.3) pour rapidement éditer un fichier ou script.
 
 Il est également possible de démarrer un éditeur dans vos propres scripts avec le code suivant:
 ``` python
@@ -203,9 +201,7 @@ with open( 'coca.txt' ) as f:
 pye.pye( content )
 ```
 
-Voici la liste des raccourcis claviers supportés:
-
-source: https://github.com/robert-hh/Micropython-Editor
+Voici la liste des [raccourcis claviers](https://github.com/robert-hh/Micropython-Editor) supportés par l'éditeur de texte.
 
 ## Echange Ordinateur <-> Pico
 
@@ -224,7 +220,7 @@ Outils pour travailler avec votre Pico.
 ## Limitation du clavier Minitel
 Le clavier ne permet pas de saisir certains caractères:
 * _ : (underscore) parfois utilisé dans les noms de fichiers
-* CTRL + C : n'arrive pas jusqu'à REPL! 
+* CTRL + C : n'arrive pas jusqu'à REPL!
 
 # Ressources complémentaires
 * [Mode d'emploi du Minitel 2 (Philips)](docs/mode-d-emploi-minitel- 2-philips.pdf) (_pdf_)
